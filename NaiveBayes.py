@@ -7,6 +7,7 @@ Created on Sun Mar 20 00:34:37 2016
 #Source: How To Implement Naive Bayes From Scratch in Python
 #Date: March 19, 2016
 #Name of Author/Programmer: Jason Brownlee 
+
 """
 
 import csv
@@ -264,10 +265,9 @@ def drawStuff(image,summaries):
         
         
         pred = predict(summaries,split2)
-        print pred
-        if (pred=='1.0'):
+        if (pred==1.0):
             cv2.rectangle(orig,(x,y),(x+w,y+h),(225,0,0))
-        elif (pred=='0.0'):
+        elif (pred==0.0):
             cv2.rectangle(orig,(x,y),(x+w,y+h),(0,0,225))
 
         #cv2.rectangle(orig,(x,y),(x+w,y+h),(0,0,255))
@@ -294,7 +294,8 @@ def main():
     predictions = getPredictions(summaries,testSet)
     accuracy = getAccuracy(testSet,predictions)
     print('Accuracy:{0}%').format(accuracy)
-
+    
+    
     image = 'blocks.jpg'
     drawStuff(image,summaries)
     
