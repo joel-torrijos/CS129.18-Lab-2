@@ -3,6 +3,10 @@
 Created on Sun Mar 20 00:34:37 2016
 
 @author: Kaira
+#Naive Bayes Tutorial
+#Source: How To Implement Naive Bayes From Scratch in Python
+#Date: March 19, 2016
+#Name of Author/Programmer: Jason Brownlee 
 """
 
 import csv
@@ -290,15 +294,7 @@ def main():
     predictions = getPredictions(summaries,testSet)
     accuracy = getAccuracy(testSet,predictions)
     print('Accuracy:{0}%').format(accuracy)
-    
-    inputVector = [24,10,16,29,26,59,12,35,35,33,15,25,31,41,30,28,28,28,14,18,12,35,66,29,37,9,12,8,14,22,39,24,26,12,8,12,11,29,13,22,33,17,7,12,26,8,17,44,22,55,19,14,28,18,47,31,7,11,35,16,24,30,27,5,'?']
-    result = predict(summaries, inputVector)
-    print('Prediction: {0}').format(result)
-    
-    inputVector2 = [10,13,10,12,20,25,11,4,34,41,37,33,33,27,16,7,28,34,42,53,55,48,38,23,24,26,35,42,48,54,45,28,21,23,13,28,35,48,41,11,17,45,25,22,32,41,39,8,24,67,44,16,32,52,45,16,8,59,49,19,20,43,38,8,'?']
-    result2 = predict(summaries, inputVector2)
-    print('Prediction: {0}').format(result2)
-    
+
     image = 'blocks.jpg'
     drawStuff(image,summaries)
     
