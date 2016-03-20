@@ -1,3 +1,4 @@
+# Extraction of feature vectors from a folder of images
 import cv2
 import numpy as np
 import sys
@@ -8,7 +9,6 @@ ddepth = cv2.CV_16S
 NG_RESIZE = 8
 NG_WINDOW_SIZE = 350
 
-# 5
 def buildSobelMap(m):
     gradX = cv2.Sobel(m, ddepth, 1, 0, 3)
     gradY = cv2.Sobel(m, ddepth, 0, 1, 3)
@@ -30,56 +30,41 @@ def getNGFeatureVector(m):
             feature.append(values)
     return feature
 
-datafile = "data.csv"
-target = open (datafile, 'w').close() 
-
-# extracting the feature vectors from the Positive folder (Objects)
-pathForPositive = "C:\Users\Jose Emmanuel\Documents\Python Scripts\Positive"
-
-for filename in os.listdir(pathForPositive):
-    img = pathForPositive
-    img += "\\"
-    img += filename
-    original = cv2.imread(img,cv2.IMREAD_UNCHANGED)
+# Extract the feature vectors from all the images in a folder
+def extractDataFromFolder(datafile, path, label):
+    for filename in os.listdir(path):
+        img = path
+        img += "\\"
+        img += filename
+        original = cv2.imread(img,cv2.IMREAD_UNCHANGED)
+        
+        newOg = cv2.GaussianBlur(original, (3,3), 0)
+        grayscale = cv2.cvtColor(newOg,cv2.COLOR_BGR2GRAY)
+        
+        gmGrayscale = buildSobelMap(grayscale)
+        ngMapGrayscale = buildNgMat(gmGrayscale)
+        data = getNGFeatureVector(ngMapGrayscale)
+        ngMapGrayscale = cv2.resize(ngMapGrayscale, (NG_WINDOW_SIZE,NG_WINDOW_SIZE));
+        target = open (datafile, 'a')
+        for i in range(0,len(data)):
+            target.write(str(data[i]))
+            target.write(",")
+        if(label == 'positive'):
+            target.write("1\n")
+        else:
+            target.write("0\n")
+        target.close()
     
-    newOg = cv2.GaussianBlur(original, (3,3), 0)
-    # convert to grayscale
-    grayscale = cv2.cvtColor(newOg,cv2.COLOR_BGR2GRAY)
-    
-    gmGrayscale = buildSobelMap(grayscale)
-    ngMapGrayscale = buildNgMat(gmGrayscale)
-    data = getNGFeatureVector(ngMapGrayscale)
-    ngMapGrayscale = cv2.resize(ngMapGrayscale, (NG_WINDOW_SIZE,NG_WINDOW_SIZE));
-    target = open (datafile, 'a')
-    for i in range(0,len(data)):
-        target.write(str(data[i]))
-        target.write(",")
-    target.write("1\n")
-    target.close()
+# Will create a csv file or overwrite the existing file
+datafile = raw_input("Name of csv file: ")
+datafile += ".csv"
+target = open (datafile, 'w').close()
 
-# extracting the feature vectors from the Negative folder (Non-objects)
-pathForNegative = "C:\Users\Jose Emmanuel\Documents\Python Scripts\Negative"
+pathForPositive = raw_input("Directory of Positive Folder: ")
+pathForNegative = raw_input("Directory of Negative Folder: ")
+extractDataFromFolder(datafile, pathForPositive, 'positive')
+extractDataFromFolder(datafile, pathForNegative, 'negative')
 
-for filename in os.listdir(pathForNegative):
-    img = pathForNegative
-    img += "\\"
-    img += filename
-    original = cv2.imread(img,cv2.IMREAD_UNCHANGED)
-    
-    newOg = cv2.GaussianBlur(original, (3,3), 0)
-    # convert to grayscale
-    grayscale = cv2.cvtColor(newOg,cv2.COLOR_BGR2GRAY)
-    gmGrayscale = buildSobelMap(grayscale)
-    ngMapGrayscale = buildNgMat(gmGrayscale)
-    data = getNGFeatureVector(ngMapGrayscale)
-    ngMapGrayscale = cv2.resize(ngMapGrayscale, (NG_WINDOW_SIZE,NG_WINDOW_SIZE));
-    target = open (datafile, 'a')
-    for i in range(0,len(data)):
-        target.write(str(data[i]))
-        target.write(",")
-    target.write("0\n")
-    target.close()
-
-print "Done!"
+print datafile + " has been created!"
 cv2.waitKey(0)
 cv2.destroyAllWindows()

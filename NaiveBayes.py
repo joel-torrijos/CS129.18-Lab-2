@@ -227,7 +227,7 @@ def drawStuff(image,summaries):
     edges = auto_canny(img) #returns edged image
     
     ret,thresh = cv2.threshold(edges,127,255,0)
-    im2,contours,hierarchy = cv2.findContours(thresh, 1, 2)
+    contours,hierarchy = cv2.findContours(thresh, 1, 2)
     print len(contours)
     
     for i in range(0, len(contours)-1):
@@ -282,7 +282,7 @@ def drawStuff(image,summaries):
 ####Main
 
 def main():
-    filename = 'data.csv'
+    filename = raw_input("Data file to be analyzed: ")
     splitRatio = 0.67
     dataset = loadCsv(filename)
     trainingSet,testSet = splitDataset(dataset,splitRatio)
@@ -296,10 +296,8 @@ def main():
     print('Accuracy:{0}%').format(accuracy)
     
     
-    image = 'blocks.jpg'
+    image = raw_input("Test the image: ")
     drawStuff(image,summaries)
-    
-    
     
     
 main()
